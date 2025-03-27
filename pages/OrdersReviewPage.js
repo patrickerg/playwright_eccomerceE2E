@@ -27,12 +27,31 @@ class OrdersReviewPage {
     await expect(this.emailId).toHaveText(username);
   }
 
+  // async SubmitAndGetOrderId() {
+  //   await this.submit.click();
+  //   await expect(this.orderConfirmationText).toHaveText(
+  //     " Thankyou for the order. "
+  //   );
+  //   return await this.orderId.textContent();
+  // }
   async SubmitAndGetOrderId() {
     await this.submit.click();
-    await expect(this.orderConfirmationText).toHaveText(
-      " Thankyou for the order. "
-    );
-    return await this.orderId.textContent();
+
+    // Wait for the confirmation text to appear
+    await this.orderConfirmationText.waitFor({
+      state: "visible",
+      timeout: 10000,
+    });
+
+    const confirmationText = await this.orderConfirmationText.textContent();
+    expect(confirmationText.trim()).toBe("Thankyou for the order.");
+
+    // Make sure the orderId is visible before extracting it
+    await this.orderId.waitFor({ state: "visible", timeout: 10000 });
+
+    // Extract and return the orderId as a string
+    const orderIdText = await this.orderId.textContent();
+    return String(orderIdText).trim(); // Ensure it's a string and remove extra spaces
   }
 }
 module.exports = { OrdersReviewPage };

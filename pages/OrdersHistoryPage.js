@@ -4,6 +4,7 @@ class OrdersHistoryPage {
     this.ordersTable = page.locator("tbody");
     this.rows = page.locator("tbody tr");
     this.orderdIdDetails = page.locator(".col-text");
+    this.orderHistoryContainer = this.page.locator(".order-history-container");
   }
   async searchOrderAndSelect(orderId) {
     await this.ordersTable.waitFor();
@@ -18,6 +19,13 @@ class OrdersHistoryPage {
 
   async getOrderId() {
     return await this.orderdIdDetails.textContent();
+  }
+
+  async waitForOrderHistoryPageToLoad() {
+    await this.orderHistoryContainer.waitFor({
+      state: "visible",
+      timeout: 10000,
+    });
   }
 }
 module.exports = { OrdersHistoryPage };
